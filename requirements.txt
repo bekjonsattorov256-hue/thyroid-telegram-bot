@@ -1,7 +1,5 @@
 flask
 onnxruntime
 Pillow
-torch
-torchvision
 numpy
 gdown
