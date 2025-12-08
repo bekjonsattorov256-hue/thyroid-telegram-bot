@@ -4,7 +4,6 @@ from pathlib import Path
 
 import numpy as np
 from PIL import Image
-import torchvision.transforms as transforms
 import onnxruntime as ort
 import gdown
 
@@ -51,24 +50,36 @@ session = ort.InferenceSession(str(MODEL_PATH), providers=["CPUExecutionProvider
 INPUT_NAME = session.get_inputs()[0].name
 print("ONNX model yuklandi. Input name:", INPUT_NAME)
 
-transform = transforms.Compose([
-    transforms.Resize((224, 224)),
-    transforms.ToTensor(),
-    transforms.Normalize(
-        mean=[0.485, 0.456, 0.406],
-        std=[0.229, 0.224, 0.225]
-    )
-])
+
+def preprocess_image(img: Image.Image) -> np.ndarray:
+    """
+    PIL image -> ONNX model kirishi: float32 [1, 3, 224, 224]
+    """
+    img = img.resize((224, 224))              # Resize
+    arr = np.array(img).astype(np.float32)    # H, W, C
+    arr = arr / 255.0
+
+    # ImageNet mean/std bilan normallashtirish
+    mean = np.array([0.485, 0.456, 0.406], dtype=np.float32)
+    std = np.array([0.229, 0.224, 0.225], dtype=np.float32)
+
+    arr = (arr - mean) / std                  # broadcasting: HWC
+    arr = np.transpose(arr, (2, 0, 1))        # CHW
+    arr = np.expand_dims(arr, axis=0)         # 1, C, H, W
+
+    return arr
+
 
 def softmax(x):
     e = np.exp(x - np.max(x))
     return e / e.sum()
 
+
 CONF_THRESH = 80.0  # % dan yuqori bo'lsa "ishonchli"
 
 
 def predict_pil(img: Image.Image):
-    x = transform(img).unsqueeze(0).numpy().astype(np.float32)
+    x = preprocess_image(img).astype(np.float32)
     outputs = session.run(None, {INPUT_NAME: x})
     logits = outputs[0][0]
     probs = softmax(logits) * 100.0
