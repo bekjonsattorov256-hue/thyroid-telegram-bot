@@ -1,5 +1,5 @@
-flask
-onnxruntime
-Pillow
+Flask
+gunicorn
+ultralytics
 numpy
-gdown
+Pillow
