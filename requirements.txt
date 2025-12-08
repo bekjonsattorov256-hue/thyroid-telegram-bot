@@ -1,5 +1,7 @@
-Flask
+flask
 gunicorn
-ultralytics
-numpy
+ultralytics==8.1.0
+opencv-python
 Pillow
+numpy
+onnxruntime
