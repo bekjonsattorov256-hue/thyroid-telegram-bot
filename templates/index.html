@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="uz">
+  <head>
+    <meta charset="utf-8">
+    <title>Thyroid AI – UTT tasnifi</title>
+  </head>
+  <body>
+    <h1>Thyroid AI – tiroid UTT tasnifi</h1>
+
+    <form method="post" enctype="multipart/form-data">
+      <p>Rasm yuklang (UTT surati):</p>
+      <input type="file" name="image" accept="image/*" required>
+      <button type="submit">Natijani ko'rish</button>
+    </form>
+
+    {% if result %}
+      <hr>
+      <h2>Natija</h2>
+      <p>{{ result }}</p>
+      <p>{{ details }}</p>
+      <p style="color:red;">
+        ⚠️ Bu AI modeli, shifokor o'rnini bosa olmaydi.
+      </p>
+    {% endif %}
+  </body>
+</html>
