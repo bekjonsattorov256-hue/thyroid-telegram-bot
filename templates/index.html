@@ -1,176 +1,419 @@
 <!DOCTYPE html>
 <html lang="uz">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Thyroid AI – UTT tahlil</title>
+  <meta charset="UTF-8">
+  <title>Tiroyid AI – Tugun tahlil paneli</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Bootstrap 5 CSS (CDN) -->
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-    />
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    }
 
-    <style>
-        body {
-            min-height: 100vh;
-            background: radial-gradient(circle at top, #0d6efd 0, #020617 45%, #000 100%);
-            color: #f8fafc;
-            display: flex;
-            flex-direction: column;
-        }
-        .glass-card {
-            background: rgba(15, 23, 42, 0.9);
-            border-radius: 1.25rem;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.55);
-            border: 1px solid rgba(148, 163, 184, 0.3);
-        }
-        .brand-badge {
-            letter-spacing: 0.08em;
-        }
-        .accent-pill {
-            background: rgba(56, 189, 248, 0.1);
-            border-radius: 999px;
-            padding: 0.25rem 0.75rem;
-            font-size: 0.8rem;
-            color: #7dd3fc;
-            border: 1px solid rgba(125, 211, 252, 0.3);
-        }
-        footer {
-            font-size: 0.8rem;
-            color: #9ca3af;
-        }
-        .result-label {
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 0.12em;
-        }
-    </style>
+    body {
+      background: #004476;
+      color: #f9fafb;
+    }
+
+    .page {
+      min-height: 100vh;
+    }
+
+    /* TOP BAR */
+    .top-bar {
+      padding: 20px 40px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #e5e7eb;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .brand-title {
+      font-size: 42px;
+      letter-spacing: 0.3em;
+      font-weight: 600;
+    }
+
+    .brand-badge {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      border: 3px solid #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .brand-badge span {
+      text-align: center;
+      line-height: 1.1;
+    }
+
+    /* MAIN PANEL */
+    .panel {
+      max-width: 1200px;
+      margin: 0 auto 40px;
+      padding: 10px 20px 40px;
+    }
+
+    .toolbar {
+      background: #003965;
+      padding: 14px 12px;
+      border-radius: 4px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.35);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      font-size: 13px;
+    }
+
+    .toolbar span.label {
+      margin-right: 6px;
+    }
+
+    .toolbar input[type="file"] {
+      background: #ffffff;
+      color: #111827;
+      border-radius: 3px;
+      padding: 4px 6px;
+      font-size: 12px;
+    }
+
+    .toolbar input[type="text"],
+    .toolbar input[type="number"] {
+      padding: 4px 6px;
+      border-radius: 3px;
+      border: 1px solid #93c5fd;
+      font-size: 12px;
+      min-width: 120px;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 3px;
+      padding: 6px 16px;
+      font-size: 13px;
+      cursor: pointer;
+      color: #ffffff;
+    }
+
+    .btn-primary {
+      background: #0ea5e9;
+    }
+
+    .btn-secondary {
+      background: #0369a1;
+    }
+
+    .btn-danger {
+      background: #ef4444;
+    }
+
+    /* GRID */
+    .grid {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: 2fr 1.4fr;
+      gap: 8px;
+    }
+
+    .panel-box {
+      background: #003965;
+      border-radius: 4px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.45);
+      overflow: hidden;
+      border-top: 3px solid #60a5fa;
+    }
+
+    .panel-header {
+      padding: 6px 10px;
+      background: #002f56;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .panel-body {
+      padding: 12px;
+      background: #003965;
+      min-height: 420px;
+      position: relative;
+    }
+
+    /* LEFT – IMAGE */
+    .image-area {
+      border: 1px solid #e5e7eb;
+      height: 380px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #022a4a;
+    }
+
+    .image-area img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+
+    .image-placeholder {
+      font-size: 14px;
+      color: #bfdbfe;
+    }
+
+    /* RIGHT – RESULT */
+    .result-section {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      font-size: 13px;
+    }
+
+    .box-light {
+      background: #f9fafb;
+      color: #111827;
+      border-radius: 3px;
+      padding: 10px 10px 12px;
+      font-size: 13px;
+    }
+
+    .box-light-title {
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .probability-bar {
+      width: 100%;
+      height: 120px;
+      border-radius: 4px;
+      border: 1px solid #d1d5db;
+      background: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      font-weight: 600;
+      color: #b91c1c;
+    }
+
+    .categories {
+      margin-top: 10px;
+    }
+
+    .cat-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin: 6px 0 8px;
+    }
+
+    .cat-buttons button {
+      border-radius: 3px;
+      border: 1px solid #9ca3af;
+      background: #e5e7eb;
+      color: #111827;
+      padding: 4px 10px;
+      font-size: 11px;
+      cursor: pointer;
+    }
+
+    .cat-buttons button.active {
+      background: #0ea5e9;
+      color: #ffffff;
+      border-color: #0ea5e9;
+    }
+
+    .helper-text {
+      font-size: 12px;
+      color: #e5e7eb;
+      line-height: 1.5;
+    }
+
+    .download-area {
+      margin-top: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+    }
+
+    .download-area small {
+      max-width: 260px;
+    }
+
+    /* FOOTER */
+    .footer {
+      text-align: center;
+      font-size: 11px;
+      color: #cbd5f5;
+      padding-bottom: 18px;
+    }
+
+    .footer span {
+      display: block;
+    }
+
+    @media (max-width: 960px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+      .panel-body {
+        min-height: auto;
+      }
+      .image-area {
+        height: 300px;
+      }
+    }
+  </style>
 </head>
 <body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-dark bg-transparent">
-        <div class="container py-3">
-            <a class="navbar-brand d-flex align-items-center gap-2" href="#">
-                <span class="badge text-bg-primary brand-badge">THYROID AI</span>
-                <span class="fw-semibold">Ultratovush tahlilchi</span>
-            </a>
-            <span class="accent-pill d-none d-md-inline-flex">
-                Sun'iy intellekt yordamchi, shifokorni almashtirmaydi
-            </span>
-        </div>
-    </nav>
+<div class="page">
 
-    <!-- Main content -->
-    <main class="container flex-grow-1 d-flex align-items-center justify-content-center py-4">
-        <div class="col-12 col-lg-8">
-            <div class="glass-card p-4 p-md-5">
-                <div class="row g-4 align-items-start">
-                    <div class="col-md-6 border-md-end border-secondary border-opacity-25">
-                        <h1 class="h3 mb-2">Tiroid UTT tasvirini yuklang</h1>
-                        <p class="text-secondary mb-3">
-                            Model tiroid tugunining <span class="fw-semibold">benign</span> yoki
-                            <span class="fw-semibold">malignant</span> bo‘lish ehtimolini taxmin qiladi.
-                        </p>
+  <!-- HEADER -->
+  <div class="top-bar">
+    <div class="brand">
+      <div class="brand-title">TIROID AI</div>
+    </div>
+    <div class="brand-badge">
+      <span>AI<br>MED</span>
+    </div>
+  </div>
 
-                        <form
-                            method="POST"
-                            enctype="multipart/form-data"
-                            action="{{ url_for('index') }}"
-                            class="mt-3"
-                        >
-                            <div class="mb-3">
-                                <label for="image" class="form-label">UTT tasvirini tanlang</label>
-                                <input
-                                    class="form-control form-control-sm"
-                                    type="file"
-                                    id="image"
-                                    name="image"
-                                    accept="image/*"
-                                    required
-                                />
-                                <div class="form-text text-secondary">
-                                    Format: JPG, PNG yoki DICOM’dan eksport qilingan rasm.
-                                </div>
-                            </div>
-                            <button type="submit" class="btn btn-primary w-100">
-                                Tahlilni boshlash
-                            </button>
-                        </form>
+  <!-- MAIN PANEL -->
+  <div class="panel">
 
-                        <div class="mt-3 small text-warning d-flex align-items-start gap-2">
-                            <span class="mt-1">⚠️</span>
-                            <span>
-                                Ushbu tizim faqat o‘quv va ilmiy maqsadlarda. Yakuniy qaror
-                                uchun albatta tajribali shifokor bilan maslahat qiling.
-                            </span>
-                        </div>
-                    </div>
+    <!-- TOOLBAR -->
+    <div class="toolbar">
+      <span class="label">Rasmni tanlang va "Yuklash" tugmasini bosing.</span>
 
-                    <div class="col-md-6 mt-4 mt-md-0">
-                        {% if result %}
-                            <div class="mb-3">
-                                <div class="result-label text-secondary mb-1">
-                                    Model xulosasi
-                                </div>
-                                <div class="alert alert-info mb-2">
-                                    {{ result }}
-                                </div>
-                                {% if details %}
-                                    <p class="mb-0 small text-secondary">
-                                        {{ details }}
-                                    </p>
-                                {% endif %}
-                            </div>
-                        {% else %}
-                            <div class="mb-3">
-                                <div class="result-label text-secondary mb-1">
-                                    Model holati
-                                </div>
-                                <div class="alert alert-dark mb-2">
-                                    Rasm yuklang va “Tahlilni boshlash” tugmasini bosing.
-                                </div>
-                                <p class="small text-secondary">
-                                    Model ResNet18 asosidagi ikki sinfli klassifikator bo‘lib,
-                                    benign va malignant tugunlarning ehtimolini hisoblaydi.
-                                </p>
-                            </div>
-                        {% endif %}
+      <input id="fileInput" type="file" accept="image/*">
 
-                        <hr class="border-secondary border-opacity-25" />
+      <input type="text" placeholder="Tadqiqot ID (ixtiyoriy)">
+      <input id="sizeInput" type="number" placeholder="O‘lcham (mm)">
 
-                        <div class="small text-secondary">
-                            <h2 class="h6 text-light">Qanday ishlaydi?</h2>
-                            <ul class="ps-3 mb-2">
-                                <li>Rasm 224 × 224 o‘lchamga keltiriladi.</li>
-                                <li>Normalizatsiya va standartlashtirish amalga oshiriladi.</li>
-                                <li>
-                                    ONNX formatdagi model benign/malignant ehtimollarini
-                                    qaytaradi.
-                                </li>
-                                <li>
-                                    Ishonchlilik past bo‘lsa, natija
-                                    <span class="fw-semibold">“NOANIQ”</span> sifatida ko‘rsatiladi.
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+      <button class="btn btn-primary">Yuklash</button>
+
+      <span style="margin-left: 8px;">Tugun o‘lchami = <span id="lesionSizeLabel">mm</span></span>
+
+      <div style="margin-left:auto; display:flex; gap:6px;">
+        <button class="btn btn-secondary">Yangi grafik</button>
+        <button class="btn btn-danger">Chiqish</button>
+      </div>
+    </div>
+
+    <!-- GRID PANELS -->
+    <div class="grid">
+      <!-- LEFT -->
+      <div class="panel-box">
+        <div class="panel-header">Rasm</div>
+        <div class="panel-body">
+          <div class="image-area">
+            <img id="preview" src="" alt="" style="display:none;">
+            <div id="placeholder" class="image-placeholder">
+              Rasm hali tanlanmagan.<br>
+              UZI yoki boshqa tasvirni yuklang.
             </div>
+          </div>
         </div>
-    </main>
+      </div>
 
-    <!-- Footer -->
-    <footer class="py-3">
-        <div class="container text-center">
-            Thyroid AI &middot;
-            <span class="text-secondary">
-                Bu AI modeli, shifokor o‘rnini bosa olmaydi.
-            </span>
+      <!-- RIGHT -->
+      <div class="panel-box">
+        <div class="panel-header">
+          Natija (klassifikator aniqligi: 90.1% – demo)
         </div>
-    </footer>
+        <div class="panel-body">
+          <div class="result-section">
 
-    <!-- Bootstrap JS (ixtiyoriy, modal/tooltiplar uchun) -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+            <!-- MALIGNANT PROBABILITY -->
+            <div class="box-light">
+              <div class="box-light-title">Malignitet ehtimoli</div>
+              <div class="probability-bar" id="probBox">
+                0&nbsp;%
+              </div>
+              <p style="margin-top:6px; font-size:12px;">
+                Bu maydon – demo uchundir. Haqiqiy tizimda model rasmni tahlil qilib,
+                malign tugun ehtimolini foizda ko‘rsatadi. Klinik qarorlar faqat shifokor tomonidan qabul qilinadi.
+              </p>
+            </div>
+
+            <!-- CATEGORIES -->
+            <div class="categories">
+              <div class="box-light-title">Malignitet kategoriyasi</div>
+              <div class="cat-buttons">
+                <button class="active">ACR</button>
+                <button>Kwak</button>
+                <button>Xitoy</button>
+                <button>Koreya</button>
+                <button>Yevropa</button>
+                <button>ATA</button>
+              </div>
+              <p class="helper-text">
+                Turli tizimlar (ACR, Kwak, ATA va boshqalar) bir xil tugunni har xil kategoriyaga qo‘yishi mumkin.
+                Platforma ushbu klassifikatsiyalarni bir joyga jamlab, shifokorga vizual taqqoslash imkonini beradi.
+              </p>
+            </div>
+
+            <!-- DOWNLOAD -->
+            <div class="download-area">
+              <small>
+                Hozirgacha kiritilgan natijalar va grafiklarni saqlash uchun
+                "Yuklab olish" tugmasini bosing.
+              </small>
+              <button class="btn btn-secondary">Yuklab olish</button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <span>Tiroyid tugunlari uchun eksperimental sun’iy intellekt paneli.</span>
+    <span>Faqat o‘qitish va tadqiqot maqsadlarida foydalanish tavsiya etiladi.</span>
+  </div>
+</div>
+
+<!-- KICHIK JS: rasm preview va o'lcham labeli -->
+<script>
+  const fileInput = document.getElementById('fileInput');
+  const preview = document.getElementById('preview');
+  const placeholder = document.getElementById('placeholder');
+  const sizeInput = document.getElementById('sizeInput');
+  const lesionLabel = document.getElementById('lesionSizeLabel');
+  const probBox = document.getElementById('probBox');
+
+  fileInput.addEventListener('change', e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const url = URL.createObjectURL(file);
+    preview.src = url;
+    preview.style.display = 'block';
+    placeholder.style.display = 'none';
+
+    // demo uchun tasodifiy ehtimol
+    const prob = Math.round(20 + Math.random() * 60);
+    probBox.textContent = prob + ' %';
+  });
+
+  sizeInput.addEventListener('input', e => {
+    const v = e.target.value;
+    lesionLabel.textContent = v ? v + ' mm' : 'mm';
+  });
+</script>
 </body>
 </html>
