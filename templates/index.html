@@ -31,12 +31,6 @@
       color: #e5e7eb;
     }
 
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-
     .brand-title {
       font-size: 40px;
       letter-spacing: 0.28em;
@@ -55,11 +49,6 @@
       font-weight: 600;
     }
 
-    .brand-badge span {
-      text-align: center;
-      line-height: 1.1;
-    }
-
     /* MAIN PANEL */
     .panel {
       max-width: 1200px;
@@ -71,49 +60,19 @@
       background: #003965;
       padding: 14px 12px;
       border-radius: 4px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.35);
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
       align-items: center;
       font-size: 13px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.35);
     }
 
-    .btn {
-      border: none;
-      border-radius: 3px;
-      padding: 6px 16px;
-      font-size: 13px;
-      cursor: pointer;
-      color: #ffffff;
-    }
-
-    .btn-primary {
-      background: #0ea5e9;
-    }
-
-    .btn-secondary {
-      background: #0369a1;
-    }
-
-    .toolbar input[type="text"],
-    .toolbar input[type="number"] {
-      padding: 4px 6px;
-      border-radius: 3px;
-      border: 1px solid #93c5fd;
-      font-size: 12px;
-      min-width: 120px;
-      background: #ffffff;
-      color: #111827;
-    }
-
-    /* Custom file button */
     #fileInput {
       display: none;
     }
 
     .file-label {
-      display: inline-block;
       background: #0369a1;
       color: #ffffff;
       padding: 6px 16px;
@@ -122,7 +81,15 @@
       cursor: pointer;
     }
 
-    /* GRID */
+    .btn-primary {
+      background: #0ea5e9;
+      color: #ffffff;
+      padding: 6px 16px;
+      border-radius: 3px;
+      cursor: pointer;
+      border: none;
+    }
+
     .grid {
       margin-top: 18px;
       display: grid;
@@ -133,8 +100,6 @@
     .panel-box {
       background: #003965;
       border-radius: 4px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.45);
-      overflow: hidden;
       border-top: 3px solid #60a5fa;
     }
 
@@ -147,12 +112,9 @@
 
     .panel-body {
       padding: 12px;
-      background: #003965;
       min-height: 420px;
-      position: relative;
     }
 
-    /* LEFT – IMAGE */
     .image-area {
       border: 1px solid #e5e7eb;
       height: 380px;
@@ -165,28 +127,12 @@
     .image-area img {
       max-width: 100%;
       max-height: 100%;
-      object-fit: contain;
-    }
-
-    .image-placeholder {
-      font-size: 14px;
-      color: #bfdbfe;
-      text-align: center;
-    }
-
-    /* RIGHT – RESULT */
-    .result-section {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      font-size: 13px;
     }
 
     .probability-bar {
       width: 100%;
       height: 120px;
       border-radius: 8px;
-      border: none;
       background: linear-gradient(90deg, #22c55e, #16a34a, #f97316, #ef4444);
       display: flex;
       align-items: center;
@@ -197,20 +143,36 @@
       box-shadow: 0 8px 18px rgba(15, 23, 42, 0.45);
     }
 
-    .note {
-      font-size: 12px;
-      color: #e5e7eb;
-      padding: 8px 10px;
-      background: rgba(15, 23, 42, 0.25);
-      border-radius: 6px;
+    /* GREEN & RED INFO BLOCKS */
+    .legend {
+      margin-top: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
     }
 
-    /* FOOTER */
+    .legend-box {
+      padding: 12px 16px;
+      border-radius: 6px;
+      font-size: 15px;
+      font-weight: 500;
+      color: #ffffff;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.25);
+    }
+
+    .good {
+      background: #22c55e; /* Yashil */
+    }
+
+    .bad {
+      background: #ef4444; /* Qizil */
+    }
+
     .footer {
       text-align: center;
-      font-size: 11px;
-      color: #cbd5f5;
-      padding-bottom: 18px;
+      padding: 18px;
+      font-size: 12px;
+      color: #bbd7ff;
     }
 
     @media (max-width: 960px) {
@@ -229,34 +191,25 @@
 
   <!-- HEADER -->
   <div class="top-bar">
-    <div class="brand">
-      <div class="brand-title">QALQONSIMON BEZ AI</div>
-    </div>
-    <div class="brand-badge">
-      <span>AI<br>MED</span>
-    </div>
+    <div class="brand-title">QALQONSIMON BEZ AI</div>
+    <div class="brand-badge"><span>AI<br>MED</span></div>
   </div>
 
   <!-- MAIN PANEL -->
   <div class="panel">
 
-    <!-- TOOLBAR -->
     <div class="toolbar">
       <span>Rasmni tanlang va “Yuklash” tugmasini bosing.</span>
 
-      <!-- Fayl tanlash tugmasi -->
       <label for="fileInput" class="file-label">Faylni tanlash</label>
       <input id="fileInput" type="file" accept="image/*">
 
-      <input type="text" placeholder="Tadqiqot ID (ixtiyoriy)">
-      <input id="sizeInput" type="number" placeholder="O‘lcham (mm)">
+      <input id="sizeInput" type="number" placeholder="O‘lcham (mm)" style="padding:4px 6px;border-radius:3px;border:1px solid #93c5fd;">
+      <button class="btn-primary">Yuklash</button>
 
-      <button class="btn btn-primary">Yuklash</button>
-
-      <span style="margin-left:6px;">Tugun o‘lchami: <span id="lesionSizeLabel">mm</span></span>
+      <span style="margin-left:6px;">Tugun o‘lchami: <b id="lesionSizeLabel">mm</b></span>
     </div>
 
-    <!-- GRID -->
     <div class="grid">
 
       <!-- LEFT -->
@@ -264,9 +217,9 @@
         <div class="panel-header">Rasm</div>
         <div class="panel-body">
           <div class="image-area">
-            <img id="preview" src="" style="display:none;">
-            <div id="placeholder" class="image-placeholder">
-              Rasm hali tanlanmagan.<br>UTT yoki boshqa tasvirni yuklang.
+            <img id="preview" style="display:none;">
+            <div id="placeholder" style="color:#bfdcff;font-size:14px;text-align:center;">
+              Rasm hali tanlanmagan.<br>UZI yoki boshqa tasvirni yuklang.
             </div>
           </div>
         </div>
@@ -274,23 +227,28 @@
 
       <!-- RIGHT -->
       <div class="panel-box">
-        <div class="panel-header">Natija </div>
+        <div class="panel-header">Natija (demo)</div>
         <div class="panel-body">
-          <div class="result-section">
-            <div class="probability-bar" id="probBox">0%</div>
 
-            <p class="note">
-              Eslatma: bu sahifa dizayn namunasidir. AI hisoblagan foizlar faqat yordamchi ma’lumot bo‘lishi kerak va faqat Tadqiqot maqsadida ishlatiladi xozircha!!!
-              Yakuniy tashxis va qaror faqat shifokor tomonidan qabul qilinadi.
-            </p>
+          <div class="probability-bar" id="probBox">0%</div>
+
+          <!-- GREEN & RED EXPLANATION -->
+          <div class="legend">
+            <div class="legend-box good">
+              ✔ Yaxshi sifatli tugun — odatda xavfi past bo‘ladi.
+            </div>
+
+            <div class="legend-box bad">
+              ✖ Yomon sifatli tugun — xavfi yuqori bo‘lishi mumkin, qo‘shimcha tekshiruv talab qiladi.
+            </div>
           </div>
+
         </div>
       </div>
 
     </div>
   </div>
 
-  <!-- FOOTER -->
   <div class="footer">
     Qalqonsimon bez tugunlarini baholash uchun eksperimental AI paneli.
   </div>
@@ -300,27 +258,24 @@
   const fileInput = document.getElementById('fileInput');
   const preview = document.getElementById('preview');
   const placeholder = document.getElementById('placeholder');
+  const probBox = document.getElementById('probBox');
   const sizeInput = document.getElementById('sizeInput');
   const lesionLabel = document.getElementById('lesionSizeLabel');
-  const probBox = document.getElementById('probBox');
 
   fileInput.addEventListener('change', e => {
     const file = e.target.files[0];
     if (!file) return;
-    const url = URL.createObjectURL(file);
 
-    preview.src = url;
-    preview.style.display = 'block';
-    placeholder.style.display = 'none';
+    preview.src = URL.createObjectURL(file);
+    preview.style.display = "block";
+    placeholder.style.display = "none";
 
-    // Demo uchun tasodifiy foiz (keyin backenddan haqiqiy qiymat berasan)
-    const prob = Math.round(10 + Math.random() * 80);
+    const prob = Math.round(10 + Math.random() * 80); // Demo foiz
     probBox.textContent = prob + "%";
   });
 
   sizeInput.addEventListener('input', e => {
-    const v = e.target.value;
-    lesionLabel.textContent = v ? v + " mm" : "mm";
+    lesionLabel.textContent = e.target.value ? e.target.value + " mm" : "mm";
   });
 </script>
 
