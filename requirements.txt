@@ -1,5 +1,7 @@
-aiogram==3.4.1
+flask
 onnxruntime
 Pillow
+torch
 torchvision
 numpy
+gdown
