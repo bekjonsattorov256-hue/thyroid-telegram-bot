@@ -141,11 +141,12 @@
       font-weight: 700;
       color: #fefce8;
       box-shadow: 0 8px 18px rgba(15, 23, 42, 0.45);
+      margin-bottom: 12px;
     }
 
     /* GREEN & RED INFO BLOCKS */
     .legend {
-      margin-top: 16px;
+      margin-top: 12px;
       display: flex;
       flex-direction: column;
       gap: 12px;
@@ -175,6 +176,46 @@
       color: #bbd7ff;
     }
 
+    .disclaimer-main {
+      margin-top: 16px;
+      padding: 10px 12px;
+      border-radius: 6px;
+      background: rgba(248, 250, 252, 0.08);
+      font-size: 13px;
+      line-height: 1.4;
+      color: #fffbeb;
+      border: 1px solid rgba(251, 191, 36, 0.8);
+    }
+
+    .probs-block {
+      margin-top: 10px;
+      font-size: 14px;
+    }
+
+    .prob-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+
+    .prob-bar-bg {
+      background:#0b3d5c;
+      border-radius:6px;
+      height:10px;
+      overflow:hidden;
+      margin-bottom:8px;
+    }
+
+    .prob-bar-benign {
+      background:#22c55e;
+      height:100%;
+    }
+
+    .prob-bar-malignant {
+      background:#ef4444;
+      height:100%;
+    }
+
     @media (max-width: 960px) {
       .grid {
         grid-template-columns: 1fr;
@@ -198,16 +239,33 @@
   <!-- MAIN PANEL -->
   <div class="panel">
 
-    <div class="toolbar">
+    <!-- Upload form -->
+    <form class="toolbar" method="POST" enctype="multipart/form-data">
       <span>Rasmni tanlang va “Yuklash” tugmasini bosing.</span>
 
       <label for="fileInput" class="file-label">Faylni tanlash</label>
-      <input id="fileInput" type="file" accept="image/*">
+      <input id="fileInput" name="image" type="file" accept="image/*">
 
-      <input id="sizeInput" type="number" placeholder="O‘lcham (mm)" style="padding:4px 6px;border-radius:3px;border:1px solid #93c5fd;">
-      <button class="btn-primary">Yuklash</button>
+      <input
+        id="sizeInput"
+        name="lesion_size"
+        type="number"
+        placeholder="O‘lcham (mm)"
+        style="padding:4px 6px;border-radius:3px;border:1px solid #93c5fd;"
+      >
+      <button class="btn-primary" type="submit">Yuklash</button>
 
-      <span style="margin-left:6px;">Tugun o‘lchami: <b id="lesionSizeLabel">mm</b></span>
+      <span style="margin-left:6px;">
+        Tugun o‘lchami:
+        <b id="lesionSizeLabel">
+          {% if lesion_size %}{{ lesion_size }} mm{% else %}mm{% endif %}
+        </b>
+      </span>
+    </form>
+
+    <div class="disclaimer-main">
+      ⚠️ <strong>Qalqonsimon AI modeli faqat ilmiy tadqiqot maqsadida ishlatilishi kerak.</strong>
+      Ushbu panel klinik tashxis o‘rnini bosa olmaydi. Yakuniy qarorlar faqat malakali shifokor tomonidan qabul qilinishi zarur.
     </div>
 
     <div class="grid">
@@ -227,10 +285,44 @@
 
       <!-- RIGHT -->
       <div class="panel-box">
-        <div class="panel-header">Natija (demo)</div>
+        <div class="panel-header">Natija</div>
         <div class="panel-body">
 
-          <div class="probability-bar" id="probBox">0%</div>
+          <!-- Katta foiz raqami -->
+          <div class="probability-bar" id="probBox">
+            {{ pred_prob|default(0)|round(1) }}%
+          </div>
+
+          <!-- Model xulosasi va tafsilotlar -->
+          <div style="margin-bottom:10px; font-size:14px;">
+            {% if result_text %}
+              <div style="margin-bottom:4px;">{{ result_text }}</div>
+            {% else %}
+              <div style="opacity:0.8;">Hozircha rasm tahlil qilinmadi.</div>
+            {% endif %}
+            {% if details_text %}
+              <div style="opacity:0.9;">{{ details_text }}</div>
+            {% endif %}
+          </div>
+
+          <!-- Benign / Malignant foizlari -->
+          <div class="probs-block">
+            <div class="prob-row">
+              <span>Yaxshi sifatli tugun (Benign):</span>
+              <strong>{{ benign|default(0)|round(2) }}%</strong>
+            </div>
+            <div class="prob-bar-bg">
+              <div class="prob-bar-benign" style="width: {{ benign|default(0) }}%;"></div>
+            </div>
+
+            <div class="prob-row">
+              <span>Yomon sifatli tugun (Malignant):</span>
+              <strong>{{ malignant|default(0)|round(2) }}%</strong>
+            </div>
+            <div class="prob-bar-bg">
+              <div class="prob-bar-malignant" style="width: {{ malignant|default(0) }}%;"></div>
+            </div>
+          </div>
 
           <!-- GREEN & RED EXPLANATION -->
           <div class="legend">
@@ -250,7 +342,7 @@
   </div>
 
   <div class="footer">
-    Qalqonsimon bez tugunlarini baholash uchun eksperimental AI paneli.
+    Qalqonsimon bez tugunlarini baholash uchun eksperimental AI paneli. Klinik foydalanish uchun mo‘ljallanmagan.
   </div>
 </div>
 
@@ -258,7 +350,6 @@
   const fileInput = document.getElementById('fileInput');
   const preview = document.getElementById('preview');
   const placeholder = document.getElementById('placeholder');
-  const probBox = document.getElementById('probBox');
   const sizeInput = document.getElementById('sizeInput');
   const lesionLabel = document.getElementById('lesionSizeLabel');
 
@@ -269,9 +360,6 @@
     preview.src = URL.createObjectURL(file);
     preview.style.display = "block";
     placeholder.style.display = "none";
-
-    const prob = Math.round(10 + Math.random() * 80); // Demo foiz
-    probBox.textContent = prob + "%";
   });
 
   sizeInput.addEventListener('input', e => {
