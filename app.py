@@ -27,7 +27,10 @@ def download_model_zip():
 
 
 def ensure_model_file():
-    """Agar ONNX model yo'q bo'lsa, zipni Drive'dan yuklab, ichidan ochadi."""
+    """
+    Agar ONNX model yo'q bo'lsa, zipni Drive'dan yuklab, ichidan ochadi.
+    thyroid_model.onnx fayli tayyor bo'lguncha davom etadi.
+    """
     if MODEL_PATH.exists():
         print("ONNX model topildi, qayta yuklash shart emas.")
         return
@@ -106,13 +109,20 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 @app.route("/", methods=["GET", "POST"])
 def index():
-    result = None
-    details = None
+    result_text = None
+    details_text = None
+
+    benign_p = None
+    malignant_p = None
+    pred_prob = None
+    lesion_size = None  # mm, formdan keladi
 
     if request.method == "POST":
+        lesion_size = request.form.get("lesion_size") or None
         file = request.files.get("image")
+
         if not file or file.filename == "":
-            result = "Rasm tanlanmadi."
+            result_text = "Rasm tanlanmadi."
         else:
             filename = secure_filename(file.filename)
             if filename == "":
@@ -126,13 +136,21 @@ def index():
             pred_upper = pred_class.upper()
 
             if status == "confident":
-                result = f"Sun'iy zakoning yakuniy xulosasi: {pred_upper} ({pred_prob:.2f}%)"
+                result_text = f"Sun'iy zakoning yakuniy xulosasi: {pred_upper} ({pred_prob:.2f}%)"
             else:
-                result = "Sun'iy zakoning yakuniy xulosasi: NOANIQ (ishonchsiz)"
+                result_text = "Sun'iy zakoning yakuniy xulosasi: NOANIQ (ishonchsiz)"
 
-            details = f"Benign: {benign_p:.2f}%, Malignant: {malignant_p:.2f}%"
+            details_text = f"Benign: {benign_p:.2f}%, Malignant: {malignant_p:.2f}%"
 
-    return render_template("index.html", result=result, details=details)
+    return render_template(
+        "index.html",
+        result_text=result_text,
+        details_text=details_text,
+        benign=benign_p,
+        malignant=malignant_p,
+        pred_prob=pred_prob,
+        lesion_size=lesion_size,
+    )
 
 
 if __name__ == "__main__":
